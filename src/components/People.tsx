@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Loader } from './Loader';
 import classNames from 'classnames';
+import { PersonLink } from '../components/PersonLink';
 
 export const People = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -75,28 +76,12 @@ export const People = () => {
               <td>{person.sex}</td>
               <td>{person.born}</td>
               <td>{person.died}</td>
-              {selectedPerson === person.slug ? (
-                <td>
-                  <Link to={'..'}>{person.motherName || '-'}</Link>
-                </td>
-              ) : (
-                <td>
-                  <Link to={`../${person.slug}`}>
-                    {person.motherName || '-'}
-                  </Link>
-                </td>
-              )}
-              {selectedPerson === person.slug ? (
-                <td>
-                  <Link to={'..'}>{person.fatherName || '-'}</Link>
-                </td>
-              ) : (
-                <td>
-                  <Link to={`../${person.slug}`}>
-                    {person.fatherName || '-'}
-                  </Link>
-                </td>
-              )}
+              <td>
+                <PersonLink name={person.motherName} people={people} />
+              </td>
+              <td>
+                <PersonLink name={person.fatherName} people={people} />
+              </td>
             </tr>
           ))}
         </tbody>
