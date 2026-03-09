@@ -20,7 +20,7 @@ export const PersonLink = ({ name, people }: Props) => {
 
   return (
     <Link
-      to={`../${person.slug}`}
+      to={`/people/${person.slug}`}
       className={classNames({
         'has-text-danger': person.sex === 'f',
       })}
