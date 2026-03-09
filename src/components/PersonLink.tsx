@@ -5,9 +5,10 @@ import classNames from 'classnames';
 type Props = {
   name: string | null;
   people: Person[];
+  to?: string;
 };
 
-export const PersonLink = ({ name, people }: Props) => {
+export const PersonLink = ({ name, people, to }: Props) => {
   if (!name) {
     return '-';
   }
@@ -20,7 +21,7 @@ export const PersonLink = ({ name, people }: Props) => {
 
   return (
     <Link
-      to={`/people/${person.slug}`}
+      to={to || `/people/${person.slug}`}
       className={classNames({
         'has-text-danger': person.sex === 'f',
       })}

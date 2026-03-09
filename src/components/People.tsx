@@ -1,7 +1,7 @@
 import { getPeople } from '../utils/getPeople';
 import { Person } from '../types/Person';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Loader } from './Loader';
 import classNames from 'classnames';
 import { PersonLink } from '../components/PersonLink';
@@ -49,29 +49,13 @@ export const People = () => {
                 'has-background-warning': person.slug === selectedPerson,
               })}
             >
-              {selectedPerson === person.slug ? (
-                <td>
-                  <Link
-                    className={classNames({
-                      'has-text-danger': person.sex === 'f',
-                    })}
-                    to={'..'}
-                  >
-                    {person.name}
-                  </Link>
-                </td>
-              ) : (
-                <td>
-                  <Link
-                    className={classNames({
-                      'has-text-danger': person.sex === 'f',
-                    })}
-                    to={`../${person.slug}`}
-                  >
-                    {person.name}
-                  </Link>
-                </td>
-              )}
+              <td>
+                <PersonLink
+                  name={person.name}
+                  people={people}
+                  to={selectedPerson === person.slug ? '..' : undefined}
+                />
+              </td>
 
               <td>{person.sex}</td>
               <td>{person.born}</td>
