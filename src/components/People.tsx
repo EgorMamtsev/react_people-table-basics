@@ -1,0 +1,121 @@
+import { getPeople } from '../utils/getPeople';
+import { Person } from '../types/Person';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { Loader } from './Loader';
+import classNames from 'classnames';
+
+export const People = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [people, setPeople] = useState<Person[]>([]);
+
+  const { personID } = useParams();
+  const selectedPerson = personID;
+
+  useEffect(() => {
+    getPeople()
+      .then(setPeople)
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  return (
+    <>
+      <h1 className="title">People Page</h1>
+      <table
+        data-cy="peopleTable"
+        className="table is-striped
+                   is-hoverable is-narrow is-fullwidth"
+      >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Sex</th>
+            <th>Born</th>
+            <th>Died</th>
+            <th>Mother</th>
+            <th>Father</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {people.map(person => (
+            <tr
+              data-cy="person"
+              key={person.slug}
+              className={classNames({
+                'has-background-warning': person.slug === selectedPerson,
+              })}
+            >
+              {selectedPerson === person.slug ? (
+                <td>
+                  <Link
+                    className={classNames({
+                      'has-text-danger': person.sex === 'f',
+                    })}
+                    to={'..'}
+                  >
+                    {person.name}
+                  </Link>
+                </td>
+              ) : (
+                <td>
+                  <Link
+                    className={classNames({
+                      'has-text-danger': person.sex === 'f',
+                    })}
+                    to={`../${person.slug}`}
+                  >
+                    {person.name}
+                  </Link>
+                </td>
+              )}
+
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              {selectedPerson === person.slug ? (
+                <td>
+                  <Link to={'..'}>{person.motherName || '-'}</Link>
+                </td>
+              ) : (
+                <td>
+                  <Link to={`../${person.slug}`}>
+                    {person.motherName || '-'}
+                  </Link>
+                </td>
+              )}
+              {selectedPerson === person.slug ? (
+                <td>
+                  <Link to={'..'}>{person.fatherName || '-'}</Link>
+                </td>
+              ) : (
+                <td>
+                  <Link to={`../${person.slug}`}>
+                    {person.fatherName || '-'}
+                  </Link>
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {isLoading && (
+        <div className="block">
+          <div className="box table-container">
+            <Loader />
+          </div>
+        </div>
+      )}
+      {hasError && (
+        <p data-cy="peopleLoadingError" className="has-text-danger">
+          Something went wrong
+        </p>
+      )}
+      {people.length === 0 && !isLoading && (
+        <p data-cy="noPeopleMessage">There are no people on the server</p>
+      )}
+    </>
+  );
+};
